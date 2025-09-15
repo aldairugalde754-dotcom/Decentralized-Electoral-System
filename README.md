@@ -82,6 +82,80 @@ assert!(propuesta.votantes.contains(&sender), NO_ES_VOTANTE);
 
 ---
 
+# --- 
+
+## Explicaciones de Fragmentos Clave del Proyecto
+
+---
+
+### 1. Creación de una Propuesta
+
+```move
+public fun crear_propuesta(
+    pregunta: String,
+    opciones: vector<Opcion>,
+    ctx: &mut TxContext ) 
+{
+    let mut votos_por_opcion = vec_map::empty<u64, u64>();
+
+    let len = vector::length(&opciones);
+    let mut i = 0;
+    while (i < len) {
+        let opcion_ref = vector::borrow(&opciones, i);
+        votos_por_opcion.insert(opcion_ref.id, 0);
+        i = i + 1;
+    };
+
+    let creador = tx_context::sender(ctx);
+    let propuesta = Propuesta {
+        id: object::new(ctx),
+        propietario: creador,
+        pregunta,
+        opciones,
+        votos_por_opcion,
+        votantes: vec_map::empty(),
+        finalizada: false,
+    };
+    transfer::transfer(propuesta, creador);
+}
+```
+-Se inicializa un mapa (VecMap) para contar los votos de cada opción.
+-Se recorren todas las opciones de la propuesta para agregar sus IDs al mapa y establecer los votos en cero.
+-Se obtiene la dirección del remitente (tx_context::sender) que será el propietario de la propuesta.
+-Se crea un objeto Propuesta con todos los datos y se transfiere al propietario, garantizando que el control del objeto quede en la cuenta correcta.
+
+Esto asegura que solo el creador pueda modificar la propuesta y que el conteo de votos empiece limpio.
+
+
+
+### 2. Emitir una Boleta
+
+```move
+public fun emitir_boleta(propuesta: &Propuesta, votante: address, ctx: &mut TxContext) {
+    assert!(!propuesta.finalizada, PROPUESTA_YA_FINALIZADA);
+    assert!(propuesta.votantes.contains(&votante), NO_ES_VOTANTE);
+
+    let boleta = Boleta {
+        id: object::new(ctx),
+        propuesta_id: object::id(propuesta),  
+    };
+    transfer::transfer(boleta, votante);
+}
+```
+Se valida que la propuesta aún no esté finalizada.
+
+Se comprueba que el votante esté registrado.
+
+Se crea una Boleta, vinculada a la propuesta mediante su ID.
+
+La boleta se transfiere al votante, dándole autorización para votar.
+
+Cada votante recibe un objeto único que actúa como prueba de autorización, evitando votos duplicados o no autorizados.
+
+
+
+---
+
 ### 💬 Interacción con el Contrato
 
 Para interactuar con el contrato, utiliza la CLI de Sui. Algunos comandos básicos:
