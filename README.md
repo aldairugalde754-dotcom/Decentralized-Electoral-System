@@ -1,4 +1,4 @@
-# 🚀 Sistema de Votación en Blockchain -- SUI
+# ⬇️ 📈 Decentralized-Electoral-System-- SUI📉
 
 Sui es una plataforma de blockchain y contratos inteligentes de capa 1 diseñada para que la propiedad de activos digitales sea rápida, privada, segura y accesible.
 
