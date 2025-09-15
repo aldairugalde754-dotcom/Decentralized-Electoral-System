@@ -24,27 +24,6 @@ Presiona el botón `<> Code` y navega a la pestaña **Codespaces**.
 
 ![Codespaces](./imagenes/codespaces.png)
 
-### 3. Crea el Codespace  
-Haz clic en **Create codespace on master**. Esto abrirá un entorno de Visual Studio Code directamente en tu navegador, con todas las herramientas necesarias ya instaladas.
-
----
-
-### 🧪 Ejecutando el Proyecto
-
-Para asegurarte de que todo está configurado correctamente, puedes ejecutar las pruebas unitarias incluidas.
-
-```
-sui move test
-
-BUILDING starter
-Running Move unit tests
-[ PASS ] starter::votacion::prueba_creacion_propuesta
-[ PASS ] starter::votacion::prueba_emitir_boleta
-[ PASS ] starter::votacion::prueba_votar
-Test result: OK. Total tests: 3; passed: 3; failed: 0
-```
-
-
 ---
 
 ### 🧩 Estructura del Proyecto
