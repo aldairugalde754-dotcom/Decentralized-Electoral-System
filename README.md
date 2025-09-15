@@ -119,13 +119,12 @@ public fun crear_propuesta(
     transfer::transfer(propuesta, creador);
 }
 ```
--Se inicializa un mapa (VecMap) para contar los votos de cada opción.
--Se recorren todas las opciones de la propuesta para agregar sus IDs al mapa y establecer los votos en cero.
--Se obtiene la dirección del remitente (tx_context::sender) que será el propietario de la propuesta.
--Se crea un objeto Propuesta con todos los datos y se transfiere al propietario, garantizando que el control del objeto quede en la cuenta correcta.
+Se inicializa un mapa (VecMap) para contar los votos de cada opción.
+Se recorren todas las opciones de la propuesta para agregar sus IDs al mapa y establecer los votos en cero.
+Se obtiene la dirección del remitente (tx_context::sender) que será el propietario de la propuesta.
+Se crea un objeto Propuesta con todos los datos y se transfiere al propietario, garantizando que el control del objeto quede en la cuenta correcta.
 
 Esto asegura que solo el creador pueda modificar la propuesta y que el conteo de votos empiece limpio.
-
 
 
 ### 2. Emitir una Boleta
@@ -152,6 +151,115 @@ La boleta se transfiere al votante, dándole autorización para votar.
 
 Cada votante recibe un objeto único que actúa como prueba de autorización, evitando votos duplicados o no autorizados.
 
+
+### 3. Función de Votar
+
+```move
+public fun votar(
+    propuesta: &mut Propuesta,
+    boleta: Boleta,
+    opcion_elegida: u64,
+    ctx: &mut TxContext
+): Voto {
+    assert!(!propuesta.finalizada, PROPUESTA_YA_FINALIZADA);
+    let sender = tx_context::sender(ctx);
+
+    assert!(&object::id(propuesta) == &boleta.propuesta_id, BOLETA_INVALIDA);
+    assert!(propuesta.votantes.contains(&sender), NO_ES_VOTANTE);
+    assert!(propuesta.votos_por_opcion.contains(&opcion_elegida), OPCION_NO_EXISTE);
+
+    let votado = propuesta.votantes.get(&sender);
+    assert!(!*votado, VOTO_YA_EMITIDO);
+
+    let current_votes_ref = propuesta.votos_por_opcion.get(&opcion_elegida);
+    let current_votes = *current_votes_ref;
+    propuesta.votos_por_opcion.insert(opcion_elegida, current_votes + 1);
+
+    propuesta.votantes.insert(sender, true);
+
+    let voto_registro = Voto {
+        id: object::new(ctx),
+        propuesta_id: object::id(propuesta),
+        votante: sender,
+        opcion_elegida,
+    };
+
+    let Boleta { id, .. } = boleta;
+    id.delete();
+
+    voto_registro
+}
+```
+Explicación:
+
+Valida que la propuesta esté activa y que la boleta coincida con la propuesta.
+
+Comprueba que el votante esté registrado y no haya votado antes.
+
+Incrementa el contador de votos de la opción elegida.
+
+Marca al votante como “ya votado” para evitar duplicados.
+
+Crea un objeto Voto que actúa como registro oficial del voto en la blockchain.
+
+Elimina la boleta, asegurando que no se pueda reutilizar.
+
+Garantiza la integridad de la votación y que cada voto sea único y rastreable.
+
+
+### 3. Función de Votar
+
+```move
+public fun votar(
+    propuesta: &mut Propuesta,
+    boleta: Boleta,
+    opcion_elegida: u64,
+    ctx: &mut TxContext
+): Voto {
+    assert!(!propuesta.finalizada, PROPUESTA_YA_FINALIZADA);
+    let sender = tx_context::sender(ctx);
+
+    assert!(&object::id(propuesta) == &boleta.propuesta_id, BOLETA_INVALIDA);
+    assert!(propuesta.votantes.contains(&sender), NO_ES_VOTANTE);
+    assert!(propuesta.votos_por_opcion.contains(&opcion_elegida), OPCION_NO_EXISTE);
+
+    let votado = propuesta.votantes.get(&sender);
+    assert!(!*votado, VOTO_YA_EMITIDO);
+
+    let current_votes_ref = propuesta.votos_por_opcion.get(&opcion_elegida);
+    let current_votes = *current_votes_ref;
+    propuesta.votos_por_opcion.insert(opcion_elegida, current_votes + 1);
+
+    propuesta.votantes.insert(sender, true);
+
+    let voto_registro = Voto {
+        id: object::new(ctx),
+        propuesta_id: object::id(propuesta),
+        votante: sender,
+        opcion_elegida,
+    };
+
+    let Boleta { id, .. } = boleta;
+    id.delete();
+
+    voto_registro
+}
+```
+Explicación:
+
+Valida que la propuesta esté activa y que la boleta coincida con la propuesta.
+
+Comprueba que el votante esté registrado y no haya votado antes.
+
+Incrementa el contador de votos de la opción elegida.
+
+Marca al votante como “ya votado” para evitar duplicados.
+
+Crea un objeto Voto que actúa como registro oficial del voto en la blockchain.
+
+Elimina la boleta, asegurando que no se pueda reutilizar.
+
+Garantiza la integridad de la votación y que cada voto sea único y rastreable.
 
 
 ---
