@@ -1,25 +1,38 @@
-![banner](./imagenes/banner.jpg)
-# Sui Starter Kit Backend
+# 🚀 Sistema de Votación en Blockchain -- SUI
 
 Sui es una plataforma de blockchain y contratos inteligentes de capa 1 diseñada para que la propiedad de activos digitales sea rápida, privada, segura y accesible.
 
-Move es un lenguaje de código abierto para escribir paquetes seguros para manipular objetos en blockchain. Permite bibliotecas, herramientas y comunidades de desarrolladores comunes en blockchains con modelos de datos y ejecución muy diferentes.
+Move es un lenguaje de código abierto para escribir programas seguros que manipulan objetos en la blockchain. Permite bibliotecas, herramientas y comunidades de desarrolladores comunes en blockchains con modelos de datos y ejecución muy diferentes.
 
-## Proyecto base
+---
 
-Puedes usar este repositorio como tu punto de partida para el desarrollo de tu proyecto backend.
+## Proyecto
 
-### Abriendo con Codespaces
+Este repositorio es un proyecto para manejar votaciones utilizando la blockchain de SUI. Permite crear propuestas con múltiples opciones, agregar votantes, emitir boletas y registrar votos de manera segura y transparente. Cada propuesta es controlada por su propietario, y cada votante recibe una boleta única para garantizar la integridad de la votación.
 
-* Asegúrate de clonar este repositorio a tu cuenta usando el botón **`Fork`**.
-    
-    ![fork](./imagenes/fork.png)
-    * Puedes renombrar el repositorio a lo que sea que se ajuste con tu proyecto.
-* Presiona el botón **`<> Code`** y luego haz click en la sección **`Codespaces`**
+---
 
-    ![codespaces](./imagenes/codespaces.png)
+## Comenzando con Codespaces
 
-* Por último, presiona **`Create codespace on master`**. Esto abrirá el proyecto en una interfaz gráfica de Visual Studio Code e instalará todas las herramientas necesarias para desarrollar con Move.
+### 1. Clona el Repositorio  
+Copia este repositorio a tu cuenta de GitHub haciendo clic en el botón **Fork**. Puedes renombrar el repositorio según tu proyecto.
+
+![Fork](./imagenes/fork.png)
+
+### 2. Abre en Codespaces  
+Presiona el botón `<> Code` y navega a la pestaña **Codespaces**.
+
+![Codespaces](./imagenes/codespaces.png)
+
+### 3. Crea el Codespace  
+Haz clic en **Create codespace on master**. Esto abrirá un entorno de Visual Studio Code directamente en tu navegador, con todas las herramientas necesarias ya instaladas.
+
+---
+
+### 🧪 Ejecutando el Proyecto
+
+Para asegurarte de que todo está configurado correctamente, puedes ejecutar las pruebas unitarias incluidas.
+
 
 ### Contenido
 
